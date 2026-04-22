@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>WOVEN — Natural Fiber Fashion Discovery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --cream:#F7F3EE;--dark:#18181A;--green:#1E3A1E;--sage:#4A6741;
+  --sand:#C9B99A;--warm:#EDE7DC;--muted:#7C7B74;--border:#E2DDD6;
+}
+html,body{height:100%;overflow-x:hidden;}
+body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--cream);}
+
+/* CURSOR */
+.cursor{position:fixed;width:10px;height:10px;background:var(--cream);border-radius:50%;
+  pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
+  transition:width .2s,height .2s;mix-blend-mode:difference;}
+.cursor.grow{width:36px;height:36px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 52px;transition:background .4s,backdrop-filter .4s;}
+nav.scrolled{background:rgba(24,24,26,.88);backdrop-filter:blur(12px);}
+nav.light{background:rgba(247,243,238,.95);backdrop-filter:blur(12px);}
+.logo{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;
+  letter-spacing:.22em;cursor:pointer;text-transform:uppercase;transition:opacity .2s;}
+.logo:hover{opacity:.7;}
+.nav-links{display:flex;gap:36px;}
+.nav-btn{font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  cursor:pointer;transition:color .25s;background:none;border:none;
+  font-family:'DM Sans',sans-serif;}
+
+/* PAGES */
+.pg{display:none;min-height:100vh;}
+.pg.on{display:block;}
+
+/* ── LANDING ── */
+#pg-home{display:none;grid-template-columns:1fr 1fr;height:100vh;position:relative;}
+#pg-home.on{display:grid;}
+.split{position:relative;overflow:hidden;cursor:pointer;}
+.mosaic{position:absolute;inset:0;display:grid;gap:2px;}
+.mosaic-aes{grid-template-columns:1fr 1fr;grid-template-rows:55% 45%;}
+.mosaic-brand{grid-template-columns:1fr 1fr;grid-template-rows:35% 65%;}
+.mosaic div{overflow:hidden;}
+.mosaic div img{width:100%;height:100%;object-fit:cover;
+  filter:brightness(.78) saturate(.9);
+  transition:transform 1.1s cubic-bezier(.25,.46,.45,.94),filter .6s;}
+.split:hover .mosaic div img{filter:brightness(.88) saturate(1);transform:scale(1.04);}
+.span2{grid-column:1/3;}
+.split-overlay{position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(24,24,26,.55) 0%,rgba(24,24,26,.2) 60%,rgba(24,24,26,.55) 100%);
+  transition:background .5s;}
+.split:hover .split-overlay{background:linear-gradient(160deg,rgba(24,24,26,.3) 0%,rgba(24,24,26,.05) 60%,rgba(24,24,26,.3) 100%);}
+.split-content{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:flex-start;justify-content:flex-end;padding:0 52px 60px;}
+.split-eyebrow{font-size:9px;letter-spacing:.25em;text-transform:uppercase;
+  color:rgba(247,243,238,.6);margin-bottom:10px;}
+.split-title{font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:300;
+  line-height:.95;color:var(--cream);margin-bottom:16px;
+  text-shadow:0 2px 30px rgba(0,0,0,.4);}
+.split-sub{font-size:12px;color:rgba(247,243,238,.65);line-height:1.75;
+  max-width:260px;margin-bottom:22px;}
+.split-cta{display:inline-flex;align-items:center;gap:8px;font-size:10px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--cream);
+  border-bottom:1px solid rgba(247,243,238,.45);padding-bottom:3px;
+  transition:gap .3s,border-color .3s;}
+.split:hover .split-cta{gap:14px;border-color:var(--cream);}
+.split-divider{position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:1px;height:100%;background:rgba(247,243,238,.12);z-index:10;pointer-events:none;}
+
+/* ── AESTHETICS PAGE ── */
+#pg-aes{background:var(--cream);color:var(--dark);}
+.aes-hero{padding:140px 60px 60px;border-bottom:1px solid var(--border);}
+.aes-hero-inner{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;}
+.aes-hero h1{font-family:'Cormorant Garamond',serif;font-size:80px;font-weight:300;
+  line-height:.92;color:var(--dark);}
+.aes-hero h1 em{font-style:italic;color:var(--sage);}
+.aes-hero-right p{font-size:13px;color:var(--muted);line-height:1.8;max-width:280px;text-align:right;}
+.aes-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;background:var(--border);}
+.aes-tile{position:relative;overflow:hidden;cursor:pointer;aspect-ratio:4/3;}
+.aes-tile-bg{position:absolute;inset:0;background-size:cover;background-position:center;
+  filter:brightness(.45) saturate(.7);
+  transition:filter .5s,transform .6s cubic-bezier(.25,.46,.45,.94);}
+.aes-tile:hover .aes-tile-bg{filter:brightness(.6) saturate(.9);transform:scale(1.04);}
+.aes-tile-overlay{position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(24,24,26,.7) 0%,transparent 60%);}
+.aes-tile-content{position:absolute;inset:0;display:flex;flex-direction:column;
+  justify-content:flex-end;padding:20px 24px;}
+.aes-tile-num{font-size:10px;color:rgba(247,243,238,.5);letter-spacing:.15em;margin-bottom:4px;}
+.aes-tile-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;
+  color:var(--cream);line-height:1;}
+.aes-tile-count{font-size:10px;color:rgba(247,243,238,.55);letter-spacing:.1em;margin-top:4px;}
+.aes-tile-cta{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream);
+  border-bottom:1px solid rgba(247,243,238,.4);display:inline-block;padding-bottom:2px;
+  margin-top:8px;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s;}
+.aes-tile:hover .aes-tile-cta{opacity:1;transform:translateY(0);}
+
+/* aesthetic gallery panel */
+#aes-gallery-view{display:none;background:var(--cream);color:var(--dark);padding-top:90px;}
+#aes-gallery-view.on{display:block;}
+.aes-back-btn{display:inline-flex;align-items:center;gap:8px;margin:0 0 0 60px;
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;
+  padding:0;transition:color .2s;}
+.aes-back-btn:hover{color:var(--dark);}
+.aes-gallery-title{padding:16px 60px 40px;font-family:'Cormorant Garamond',serif;
+  font-size:60px;font-weight:300;color:var(--dark);line-height:1;}
+.aes-gallery-grid{columns:3;gap:16px;padding:0 60px 60px;column-fill:balance;}
+.aes-grid-item{break-inside:avoid;margin-bottom:16px;position:relative;
+  overflow:hidden;cursor:pointer;}
+.aes-grid-item img{width:100%;display:block;
+  transition:transform .7s cubic-bezier(.25,.46,.45,.94);}
+.aes-grid-item:hover img{transform:scale(1.04);}
+.aes-grid-caption{position:absolute;bottom:0;left:0;right:0;
+  padding:40px 16px 14px;
+  background:linear-gradient(transparent,rgba(24,24,26,.72));
+  opacity:0;transition:opacity .3s;pointer-events:none;}
+.aes-grid-item:hover .aes-grid-caption{opacity:1;}
+.aes-grid-caption-brand{font-size:13px;font-weight:500;color:var(--cream);letter-spacing:.03em;}
+.aes-grid-caption-link{font-size:10px;color:rgba(247,243,238,.7);letter-spacing:.1em;
+  text-transform:uppercase;border-bottom:1px solid rgba(247,243,238,.35);
+  display:inline-block;margin-top:4px;}
+
+/* ── BRANDS PAGE ── */
+#pg-brands{background:var(--cream);color:var(--dark);}
+.brands-hero{padding:140px 60px 80px;border-bottom:1px solid var(--border);}
+.brands-hero h1{font-family:'Cormorant Garamond',serif;font-size:80px;font-weight:300;
+  line-height:.92;color:var(--dark);margin-bottom:16px;}
+.brands-hero p{font-size:13px;color:var(--muted);max-width:400px;line-height:1.8;}
+.brand-filters{padding:24px 60px;display:flex;align-items:center;gap:16px;
+  border-bottom:1px solid var(--border);background:var(--cream);
+  position:sticky;top:0;z-index:100;}
+.filter-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.filter-btn{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  background:none;border:1px solid var(--border);padding:7px 16px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:all .2s;border-radius:20px;}
+.filter-btn:hover{border-color:var(--dark);color:var(--dark);}
+.filter-btn.active{background:var(--dark);color:var(--cream);border-color:var(--dark);}
+.filter-divider{width:1px;height:20px;background:var(--border);margin:0 4px;}
+.brand-row{border-top:1px solid var(--border);display:flex;align-items:stretch;min-height:440px;overflow:hidden;}
+.brand-row:last-child{border-bottom:1px solid var(--border);}
+.brand-info{width:340px;min-width:340px;padding:52px 52px 52px 60px;
+  border-right:1px solid var(--border);display:flex;flex-direction:column;
+  justify-content:center;gap:14px;}
+.brand-num{font-size:11px;color:var(--muted);letter-spacing:.14em;}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;
+  color:var(--dark);line-height:1.05;letter-spacing:-.01em;}
+.brand-origin{font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;}
+.brand-summary{font-size:13px;color:#3A3A38;line-height:1.82;margin-top:4px;}
+.brand-fibers{font-size:11px;color:var(--sage);letter-spacing:.06em;font-style:italic;}
+.brand-price-row{display:flex;align-items:center;gap:10px;margin-top:2px;}
+.brand-price{font-size:11px;letter-spacing:.1em;color:var(--dark);font-weight:500;}
+.brand-price-range{font-size:11px;color:var(--muted);}
+.brand-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;}
+.brand-tag{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);
+  border:1px solid rgba(74,103,65,.35);padding:4px 9px;border-radius:20px;}
+.brand-visit{margin-top:6px;display:inline-flex;align-items:center;gap:6px;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dark);
+  border-bottom:1px solid rgba(24,24,26,.3);padding-bottom:2px;cursor:pointer;
+  text-decoration:none;transition:color .2s,border-color .2s;width:fit-content;}
+.brand-visit:hover{color:var(--sage);border-color:var(--sage);}
+.brand-images-wrap{flex:1;overflow-x:auto;overflow-y:hidden;display:flex;
+  align-items:stretch;scroll-snap-type:x mandatory;scrollbar-width:none;cursor:grab;}
+.brand-images-wrap:active{cursor:grabbing;}
+.brand-images-wrap::-webkit-scrollbar{display:none;}
+.brand-img-item{flex:0 0 auto;scroll-snap-align:start;position:relative;
+  display:flex;align-items:center;justify-content:center;background:#EDEAE5;height:100%;}
+.brand-img-item img{display:block;width:auto;height:auto;max-height:440px;max-width:600px;
+  min-width:200px;object-fit:contain;
+  transition:transform .7s cubic-bezier(.25,.46,.45,.94);pointer-events:none;}
+.brand-img-item:hover img{transform:scale(1.03);}
+.scroll-hint{display:flex;align-items:center;padding:0 20px;color:var(--muted);
+  font-size:11px;letter-spacing:.1em;writing-mode:vertical-rl;
+  opacity:.5;user-select:none;flex-shrink:0;}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(24,24,26,.85);
+  z-index:2000;align-items:center;justify-content:center;padding:40px;
+  backdrop-filter:blur(6px);}
+.modal-bg.on{display:flex;}
+.modal-card{background:var(--cream);max-width:500px;width:100%;overflow:hidden;
+  animation:modalIn .35s cubic-bezier(.34,1.56,.64,1);}
+@keyframes modalIn{from{opacity:0;transform:scale(.93) translateY(10px);}to{opacity:1;transform:none;}}
+.modal-img{width:100%;height:300px;object-fit:cover;display:block;}
+.modal-body{padding:28px 32px 32px;}
+.modal-eyebrow{font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:8px;}
+.modal-brand-name{font-family:'Cormorant Garamond',serif;font-size:36px;
+  font-weight:300;color:var(--dark);margin-bottom:10px;}
+.modal-desc{font-size:13px;color:#3A3A38;line-height:1.8;margin-bottom:20px;}
+.modal-actions{display:flex;gap:12px;align-items:center;}
+.modal-btn{font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  background:var(--dark);color:var(--cream);border:none;padding:13px 26px;
+  cursor:pointer;transition:background .2s;font-family:'DM Sans',sans-serif;text-decoration:none;}
+.modal-btn:hover{background:var(--sage);}
+.modal-close{font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);background:none;border:none;cursor:pointer;
+  padding:13px;font-family:'DM Sans',sans-serif;}
+.modal-close:hover{color:var(--dark);}
+
+/* FOOTER */
+.page-footer{padding:28px 60px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:18px;
+  font-weight:300;letter-spacing:.2em;color:var(--muted);}
+.footer-text{font-size:11px;color:var(--muted);letter-spacing:.08em;}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <span class="logo" id="nav-logo" onclick="goHome()">WOVEN</span>
+  <div class="nav-links">
+    <button class="nav-btn" id="nav-aes-btn" onclick="goAes()">Aesthetics</button>
+    <button class="nav-btn" id="nav-brands-btn" onclick="goBrands()">Brands</button>
+  </div>
+</nav>
+
+<!-- LANDING -->
+<div id="pg-home" class="on">
+  <div class="split-divider"></div>
+  <div class="split" id="split-aes" onclick="goAes()">
+    <div class="mosaic mosaic-aes">
+      <div><img src="https://shopslowsunday.com/cdn/shop/files/slowsunday-june-nightie-organic-cotton-nightgown-with-lace-trim.jpg?v=1776457593&width=1500" alt=""/></div>
+      <div><img src="https://cdn.sanity.io/images/4ds6ga3z/productionv2/36686c85781bd7fe1f1368f6423ea6b2ad8d09f4-2572x4400.jpg?w=600&q=75&fit=clip&auto=format" alt=""/></div>
+      <div class="span2"><img src="https://i.ibb.co/zTWR6WGD/Screenshot-2026-04-21-000535.png" alt=""/></div>
+    </div>
+    <div class="split-overlay"></div>
+    <div class="split-content">
+      <span class="split-eyebrow">Discover by</span>
+      <h2 class="split-title">Aesthetic</h2>
+      <p class="split-sub">Find brands that match your personal style — not just your size.</p>
+      <span class="split-cta">Explore aesthetics →</span>
+    </div>
+  </div>
+  <div class="split" id="split-brand" onclick="goBrands()">
+    <div class="mosaic mosaic-brand">
+      <div class="span2"><img src="https://cdn.shopify.com/s/files/1/0123/5065/2473/files/LPCover_31f481a8-554d-4eb4-9942-98a0ec6f5730.jpg?v=1776442676&format=webp&width=600" alt=""/></div>
+      <div><img src="https://www.taylorstitch.com/cdn/shop/files/ts_q12026_dispatch_blog_image_q1lookbook_06_1000x.jpg?v=7864276213778154028" alt=""/></div>
+      <div><img src="https://thegather.shop/cdn/shop/collections/Screenshot_2026-01-19_at_09.32.58.png?v=1768815259&width=1500" alt=""/></div>
+    </div>
+    <div class="split-overlay"></div>
+    <div class="split-content">
+      <span class="split-eyebrow">Discover by</span>
+      <h2 class="split-title">Brand</h2>
+      <p class="split-sub">Explore curated natural fiber brands — each with their own story.</p>
+      <span class="split-cta">Meet the brands →</span>
+    </div>
+  </div>
+</div>
+
+<!-- AESTHETICS PAGE -->
+<div id="pg-aes" class="pg">
+  <div id="aes-main">
+    <div class="aes-hero">
+      <div class="aes-hero-inner">
+        <h1>Discover<br/>by <em>Aesthetic</em></h1>
+        <div class="aes-hero-right"><p>Browse natural fiber fashion by vibe, not category. Click an aesthetic to explore the brands that live there.</p></div>
+      </div>
+    </div>
+    <div class="aes-tiles" id="aes-tiles"></div>
+    <div class="page-footer"><span class="footer-logo">WOVEN</span><span class="footer-text">Natural Fiber Fashion Discovery</span></div>
+  </div>
+  <div id="aes-gallery-view">
+    <button class="aes-back-btn" id="aes-back">← All aesthetics</button>
+    <div class="aes-gallery-title" id="aes-gallery-title"></div>
+    <div class="aes-gallery-grid" id="aes-gallery-grid"></div>
+  </div>
+</div>
+
+<!-- BRANDS PAGE -->
+<div id="pg-brands" class="pg">
+  <div class="brands-hero">
+    <h1>The<br/>Brands</h1>
+    <p>Every brand here is built on natural fibers — cotton, linen, hemp, wool, silk. No synthetics. Scroll each brand to explore their world.</p>
+  </div>
+  <div class="brand-filters">
+    <span class="filter-label">Sort by</span>
+    <button class="filter-btn active" id="fb-default" onclick="sortBrands('default',this)">Default</button>
+    <button class="filter-btn" onclick="sortBrands('az',this)">A → Z</button>
+    <button class="filter-btn" onclick="sortBrands('za',this)">Z → A</button>
+    <div class="filter-divider"></div>
+    <span class="filter-label">Price</span>
+    <button class="filter-btn" onclick="sortBrands('price-asc',this)">$ → $$$$</button>
+    <button class="filter-btn" onclick="sortBrands('price-desc',this)">$$$$ → $</button>
+  </div>
+  <div id="brands-list"></div>
+  <div class="page-footer"><span class="footer-logo">WOVEN</span><span class="footer-text">Natural Fiber Fashion Discovery</span></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal-card">
+    <img class="modal-img" id="modal-img" src="" alt=""/>
+    <div class="modal-body">
+      <p class="modal-eyebrow" id="modal-eyebrow"></p>
+      <h2 class="modal-brand-name" id="modal-brand-name"></h2>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="modal-actions">
+        <a class="modal-btn" id="modal-cta" href="#" target="_blank">Visit brand</a>
+        <button class="modal-close" id="modal-close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const BRANDS = [  {
+    name:'TBCo', url:'https://us.tbco.com', country:'UK',
+    fibers:'Cotton, wool, cashmere', price:'$$', range:'$50–$150',
+    aesthetics:['Trendy','Loungewear','Coastal / Beach'],
+    summary:'TBCo offers unique and fun pieces that are all 100% natural or recycled materials and is B-Corp certified. Their playful prints and relaxed silhouettes make sustainable fashion feel joyful.',
+    images:[
+      'https://us.tbco.com/cdn/shop/files/Build_Your_Own_Mother_s_Day_Gift_Box_1.jpg?v=1771923912&width=1080',
+      'https://cdn.shopify.com/s/files/1/0682/8471/1161/files/TBCo_at_Copenhagen_Fashion_Week_-_1.jpg?v=1769776531',
+      'https://cdn.shopify.com/s/files/1/0682/8471/1161/files/TBCo_at_Copenhagen_Fashion_Week_-_5.jpg?v=1769776531',
+      'https://us.tbco.com/cdn/shop/files/TSAPRBGD-CottonT-Shirt_Snake-1.png?v=1773132095&width=1080',
+    ]
+  },
+  {
+    name:'The Gather', url:'https://thegather.shop', country:'UK',
+    fibers:'Wool, cashmere, lambswool', price:'$$–$$$', range:'$100–$300',
+    aesthetics:['Travel / Capsule','Bohemian','Quiet Luxury','Minimalist'],
+    summary:'The Gather offers soft and elegant knitwear meant to last. Each piece is crafted with care using the finest natural fibers — the kind of knit you keep for decades.',
+    images:[
+      'https://i.ibb.co/ML1xXLw/Screenshot-2026-04-21-005439.png',
+      'https://thegather.shop/cdn/shop/collections/Screenshot_2026-01-19_at_09.32.58.png?v=1768815259&width=1500',
+      'https://i.ibb.co/Txd4hSC0/Screenshot-2026-04-21-011328.png',
+      'https://thegather.shop/cdn/shop/files/thegather-70.jpg?v=1772538434&width=1200',
+    ]
+  },
+  {
+    name:'Slow Sunday', url:'https://shopslowsunday.com', country:'',
+    fibers:'Organic cotton, linen', price:'$–$$$', range:'$42–$300',
+    aesthetics:['Bohemian','Coastal / Beach','Trendy'],
+    summary:'Slow Sunday embraces the pace its name suggests — ethically made pieces designed to slow down consumption. Their dreamy linen and cotton pieces are feminine, considered, and made to last.',
+    images:[
+      'https://i.ibb.co/rRQjGVjp/Screenshot-2026-04-21-013518.png',
+      'https://shopslowsunday.com/cdn/shop/files/slowsunday-june-nightie-organic-cotton-nightgown-with-lace-trim.jpg?v=1776457593&width=1500',
+      'https://shopslowsunday.com/cdn/shop/files/IMG_1722.jpg?v=1775844998&width=1500',
+    ]
+  },
+  {
+    name:'Buck Mason', url:'https://www.buckmason.com', country:'USA — Venice, California',
+    fibers:'Cotton, linen, wool, selvedge denim, cashmere', price:'$$$', range:'$50–$300',
+    aesthetics:['Workwear','Travel / Capsule','Quiet Luxury'],
+    summary:'Buck Mason makes the kind of American wardrobe classics that look better the more you wear them. Proper fabrics, proper construction — no compromises on quality or sustainability credentials.',
+    images:[
+      'https://cdn.shopify.com/s/files/1/0123/5065/2473/files/LPCover_31f481a8-554d-4eb4-9942-98a0ec6f5730.jpg?v=1776442676&format=webp&width=900&height=900',
+      'https://cdn.shopify.com/s/files/1/0123/5065/2473/files/journal_10-Recovered2.jpg?v=1768592104&format=webp&width=900&height=900',
+      'https://cdn.shopify.com/s/files/1/0123/5065/2473/files/LPCover_1_45d83f1f-6d2b-475f-af4f-8cad0354957f.jpg?v=1775695513&format=webp&width=600&height=600',
+    ]
+  },
+  {
+    name:'Bae Mat Boa', url:'https://www.baematboa.com', country:'France — Brittany',
+    fibers:'Cotton poplin, natural artisanal fabrics', price:'$$$', range:'$140–$300',
+    aesthetics:['Coastal / Beach','Quiet Luxury'],
+    summary:'BaeMat Boa is artisanal fashion in its purest form — hand-cut, hand-embroidered, and made to order from a small studio in Brittany, France. Every piece is unique.',
+    images:[
+      'https://i.ibb.co/Zz41jffs/Screenshot-2026-04-21-184719.png',
+      'https://i.ibb.co/mVqRXM44/Screenshot-2026-04-21-185657.png',
+      'https://i.ibb.co/rf58H65h/Screenshot-2026-04-21-185614.png',
+    ]
+  },
+  {
+    name:'Kotn', url:'https://kotn.com', country:'Canada',
+    fibers:'Egyptian cotton, linen', price:'$$', range:'$60–$120',
+    aesthetics:['Minimalist','Travel / Capsule','Streetwear'],
+    summary:'Kotn makes the kind of wardrobe basics you\'ll actually wear for years — clean cuts in genuinely soft Egyptian cotton. No greenwashing, no vague claims: they publish their full supply chain and invest directly in the farming communities they work with.',
+    images:[
+      'https://cdn.sanity.io/images/4ds6ga3z/productionv2/233018c0ec0582b5283f5dc1febd11564100d508-2448x1824.jpg?w=1920&q=75&fit=clip&auto=format',
+      'https://cdn.sanity.io/images/4ds6ga3z/productionv2/7d37f1d87730be88a7ff24250bedb1f13636d522-1796x956.jpg?w=1920&q=75&fit=clip&auto=format',
+      'https://cdn.sanity.io/images/4ds6ga3z/productionv2/3f20fa2cbc3b181b5a30136443135ec2d831e424-1796x896.jpg?w=1920&q=75&fit=clip&auto=format',
+    ]
+  },
+  {
+    name:'MATE the Label', url:'https://matethelabel.com', country:'USA — Los Angeles',
+    fibers:'Organic cotton', price:'$$$', range:'$80–$160',
+    aesthetics:['Minimalist','Quiet Luxury','Loungewear'],
+    summary:'If you want organic cotton that actually feels luxurious, MATE the Label is the answer. Everything is made within 10 miles of their LA studio — which means a smaller carbon footprint and real accountability over working conditions.',
+    images:[
+      'https://outofofficemode.com/wp-content/uploads/2022/04/MATE-the-Label-Fleece-Close-Up-scaled.jpg',
+      'https://i.ibb.co/yBMMk99H/Screenshot-2026-04-21-195150.png',
+      'https://i.ibb.co/vCNf0KKy/Screenshot-2026-04-22-041501.png',
+    ]
+  },
+  {
+    name:'Rawganique', url:'https://rawganique.com', country:'USA / Canada',
+    fibers:'Organic cotton, linen, hemp, merino wool', price:'$$', range:'$40–$100',
+    aesthetics:['Minimalist','Bohemian','Loungewear'],
+    summary:'Rawganique is for people who want clothing with zero compromises — no polyester, no elastane, no synthetic dyes. They\'ve been doing this since 1997, making them one of the most experienced natural fiber brands on the market.',
+    images:[
+      'https://rawganique.com/cdn/shop/files/mariana-atelier-slippers-20240529-DSCF7786-3_450x.jpg?v=1719820683',
+      'https://i.ibb.co/7dRR9hFc/Screenshot-2026-04-22-041738.png',
+      'https://i.ibb.co/7DKrH2F/Screenshot-2026-04-22-041909.png',
+    ]
+  },
+  {
+    name:'Jungmaven', url:'https://jungmaven.com', country:'USA — Los Angeles',
+    fibers:'Hemp, organic cotton', price:'$$', range:'$50–$95',
+    aesthetics:['Streetwear','Coastal / Beach','Bohemian'],
+    summary:'Jungmaven makes the kind of casual tees you reach for every day — cut in LA from hemp-cotton blends that are softer than regular cotton and more durable too. The coastal, laid-back aesthetic makes them easy to wear anywhere.',
+    images:[
+      'https://i.ibb.co/TqqCCFBG/Screenshot-2026-04-22-042523.png',
+      'https://i.ibb.co/wryMN5R3/Screenshot-2026-04-22-042606.png',
+      'https://images.ctfassets.net/lm5017k93tvi/s6hiOUneBNue8OfXBXhHC/30b43fa65185661bc8541658c8d9f341/JMResale_mission.jpg?w=1200&fm=jpg',
+    ]
+  },
+  {
+    name:'Beaumont Organic', url:'https://beaumont-organic.com', country:'UK',
+    fibers:'GOTS organic cotton', price:'$$$', range:'$90–$200',
+    aesthetics:['Quiet Luxury','Workwear','Minimalist','Bohemian'],
+    summary:'Beaumont Organic fills the gap between sustainable and polished — their pieces look like they belong in a fashion editorial but are made entirely in certified organic cotton in EU factories.',
+    images:[
+      'https://www.beaumontorganic.com/cdn/shop/files/DSC06735.jpg?v=1770806339&width=720',
+      'https://www.beaumontorganic.com/cdn/shop/files/Beaumontorganic6864f8ce4ab8a1113590086864f8ce4ab91.6864f8ce4ab91.jpg?v=1772055348&width=720',
+      'https://i.ibb.co/gZrvS5pL/Screenshot-2026-04-21-000835.png',
+    ]
+  },
+  {
+    name:'Taylor Stitch', url:'https://taylorstitch.com', country:'USA — San Francisco',
+    fibers:'Organic cotton, linen, hemp, wool', price:'$$$', range:'$90–$250',
+    aesthetics:['Travel / Capsule','Minimalist'],
+    summary:'Taylor Stitch is a masterclass in making clothes built to last. Their Workshop model means they only produce what people actually want — no overstock, no waste. The quality is exceptional across linen, hemp, and organic cotton.',
+    images:[
+      'https://www.taylorstitch.com/cdn/shop/files/ts_q12026_dispatch_blog_image_q1lookbook_06_1000x.jpg?v=7864276213778154028',
+      'https://www.taylorstitch.com/cdn/shop/files/ts_q12026_dispatch_blog_image_q1lookbook_24_1000x.jpg?v=8791276521345007686',
+      'https://assets.mr-mag.com/2022/12/Shot18_0367.jpg',
+    ]
+  },
+  {
+    name:'Yoke', url:'https://yoketokyo.com', country:'Tokyo, Japan',
+    fibers:'Brewed Protein™, wool, cashmere, cotton, linen, alpaca', price:'$$$$', range:'$200–$600',
+    aesthetics:['Trendy','Streetwear','Quiet Luxury','Edgy'],
+    summary:'Luxury done in an ethical way. Unique and unisex pieces meant to last. The designer works with local artisans and uses innovative natural materials including bio-based Brewed Protein™ fibers.',
+    images:[
+      'https://yoketokyo.com/cdn/shop/articles/D5N5004_2000x.jpg?v=1764557833',
+      'https://yoketokyo.com/cdn/shop/files/IMG_6547_2f783351-f2e3-4beb-a22a-541ba3a58845.jpg?v=1775527016&width=3000',
+      'https://i.ibb.co/zVvfkxSH/Screenshot-2026-04-22-043508.png',
+    ]
+  },
+  {
+    name:'Romonito', url:'https://romontio.com', country:'New York City',
+    fibers:'Linen, silk, cotton', price:'$$', range:'$100–$200',
+    aesthetics:['Bohemian','Coastal / Beach','Trendy'],
+    summary:'A small company based in NYC committed to producing ethical and sustainable clothing. With linen as its hero fiber, Romonito creates romantic, textural pieces that feel handcrafted and alive.',
+    images:[
+      'https://romontio.com/cdn/shop/files/Untitled_design.jpg?v=1776299103&width=1500',
+      'https://i.ibb.co/wFFKLYxT/Screenshot-2026-04-22-043652.png',
+      'https://i.ibb.co/GfVHP0Fp/Screenshot-2026-04-22-043726.png',
+      'https://i.ibb.co/CKbpr2pq/Screenshot-2026-04-22-043804.png',
+    ]
+  },
+  {
+    name:'Yes Friends', url:'https://yesfriends.co', country:'UK',
+    fibers:'Organic cotton', price:'$', range:'$20–$100',
+    aesthetics:['Travel / Capsule','Minimalist'],
+    summary:'Yes Friends mission is to provide sustainable clothing at an affordable cost. They do so by growing their own organic cotton and keeping their supply chain radically transparent.',
+    images:[
+      'https://yesfriends.co/cdn/shop/files/ethical-sustainable-affordable-organic-cotton-26.jpg?v=1728578132',
+      'https://i.ibb.co/GfGqqhWv/Screenshot-2026-04-22-044321.png',
+      'https://yesfriends.co/cdn/shop/collections/ss25-yes-friends-ethical-sustainable-50_-42.jpg?crop=center&height=1439&v=1767607097&width=1200',
+    ]
+  },
+  {
+    name:'BOODY', url:'https://boody.com', country:'Australia',
+    fibers:'Organic bamboo viscose', price:'$', range:'$20–$100',
+    aesthetics:['Loungewear'],
+    summary:'BOODY focuses on comfort with their one-of-a-kind organic bamboo viscose, made to be more breathable and softer than conventional cotton. Their basics are perfect for everyday wear and lounging.',
+    images:[
+      'https://boody.com/cdn/shop/files/test2_1512x.jpg?v=1706159655',
+      'https://boody.com/cdn/shop/files/Why_Bamboo_Copy_1512x.jpg?v=1707705133',
+      'https://boody.com/cdn/shop/files/comforttttttt_1512x.jpg?v=1706159661',
+    ]
+  },
+  {
+    name:'Honest Basics', url:'https://www.honest-basics.com', country:'Berlin, Germany',
+    fibers:'Organic cotton, recycled cotton, recycled wool', price:'$', range:'$10–$100',
+    aesthetics:['Loungewear','Travel / Capsule','Minimalist'],
+    summary:'Honest Basics focuses on transparency throughout the whole production of an item. They offer affordable, well-made pieces with a clear conscience — ideal for building a no-fuss sustainable wardrobe.',
+    images:[
+      'https://sustainablereview.com//wp-content/uploads/2023/10/pasted-image-0-2023-10-19T142002.954.png',
+      'https://i.ibb.co/r2LXQH6K/Screenshot-2026-04-22-045532.png',
+      'https://www.honest-basics.com/cdn/shop/files/mega_menu_washed_desktop.jpg?v=1770193186&width=3600',
+    ]
+  },
+  {
+    name:'Baukjen', url:'https://www.baukjen.com', country:'UK — London',
+    fibers:'Organic cotton, wool, viscose', price:'$$$', range:'$150–$300',
+    aesthetics:['Coastal / Beach','Trendy','Quiet Luxury'],
+    summary:'Baukjen is proof that polished, fashion-forward womenswear and sustainability can coexist. As one of the UK\'s most established sustainable labels, they lead on organic materials and ethical production.',
+    images:[
+      'https://i.ibb.co/wh7FwfWs/Screenshot-2026-04-21-012554.png',
+      'https://i.ibb.co/qFpY8vkL/Screenshot-2026-04-21-012529.png',
+      'https://www.baukjen.com/cdn/shop/files/robyn-organic-cotton-stretch-jeans-soft-white-jn40071-sfw-6-jeans-baukjen-8210387.jpg?v=1772625455&width=1600',
+    ]
+  },
+  {
+    name:'Wrap London', url:'https://www.wraplondon.com', country:'UK — London',
+    fibers:'Cotton, linen, hemp, wool, alpaca', price:'$$$', range:'$100–$300',
+    aesthetics:['Coastal / Beach','Trendy','Quiet Luxury'],
+    summary:'Wrap London is a quiet, small-batch London label built around a single idea: buy once, buy best. Almost their entire collection uses natural or responsibly sourced fibers.',
+    images:[
+      'https://wraplondon.imgix.net/live/frontpages/CU209/1h@2x.jpg?smpv=506&q=60&auto=format',
+      'https://wraplondon.imgix.net/live/productimages/modelshots/AA_D2_S3_TD20A_TF93A_TF95A_TF44A_TF40A_0065_Full_SS26_Landscape.jpg?q=50&auto=format&ixlib=imgixjs-3.4.2&w=1446',
+      'https://wraplondon.imgix.net/live/productimages/modelshots/AP_D1_S8_TE68A_TA21C_0056-3_Story_HS26_Portrait.jpg?q=50&auto=format&ixlib=imgixjs-3.4.2&w=688',
+    ]
+  },
+  {
+    name:'Coco Maisonette', url:'https://cocomaisonette.com', country:'USA — Southern California',
+    fibers:'Deadstock fabrics, reclaimed cotton, natural organic fibers', price:'$$', range:'$48–$138',
+    aesthetics:['Bohemian','Coastal / Beach','Loungewear'],
+    summary:'Coco Maisonette is a slow fashion community building clothes the intentional way. Every piece is cut from deadstock or reclaimed fabrics in Southern California — minimal waste, maximum soul.',
+    images:[
+      'https://cocomaisonette.com/cdn/shop/files/IMG_0739.jpg?v=1763332976&width=533',
+      'https://cocomaisonette.com/cdn/shop/files/IMG_48112.jpg?v=1746828872',
+      'https://cocomaisonette.com/cdn/shop/files/IMG_4712.jpg?v=1746828090&width=1946',
+    ]
+  },
+  {
+    name:'Gillian Stevens', url:'https://gillianstevens.co', country:'Canada — Vancouver',
+    fibers:'Organic cotton (Peruvian), linen (Lithuanian), wool, alpaca', price:'$$$', range:'$135–$400',
+    aesthetics:['Bohemian'],
+    summary:'Gillian Stevens is a Vancouver-based womenswear label built around natural fibers and the people who make them. Each piece is thoughtfully designed for longevity, not trends.',
+    images:[
+      'https://gillianstevens.co/cdn/shop/files/TessaComrie_GillianStevens_Mendocino-000030440014.jpg?v=1738454224',
+      'https://gillianstevens.co/cdn/shop/files/1P0A2151.png?v=1776257849&width=3840',
+      'https://gillianstevens.co/cdn/shop/files/1P0A9198_9fbeea57-4c0f-4571-892c-8483f646d386.png?v=1773240483&width=3840',
+    ]
+  },
+  {
+    name:'Sønderhaus', url:'https://sonder.haus', country:'USA — Salt Lake City',
+    fibers:'Organic cotton, wool', price:'$$', range:'$40–$150',
+    aesthetics:['Trendy','Bohemian'],
+    summary:'Run by three sisters and their best friend out of Salt Lake City, Sønderhaus makes thoughtfully designed natural fiber pieces with a warm, personal energy you can feel in every stitch.',
+    images:[
+      'https://cdn.shopify.com/s/files/1/0662/6790/6268/files/New_mobile_landing_page_5_9fbc9cc0-b0ea-41af-be52-ff288a878d3e.png?v=1774908161&width=1280',
+      'https://sonder.haus/cdn/shop/files/DSC_8027.jpg?v=1773086286&width=720',
+      'https://i.ibb.co/B5FG5GT9/Screenshot-2026-04-21-181107.png',
+    ]
+  },
+  {
+    name:'HARA the Label', url:'https://hara.earth', country:'Australia',
+    fibers:'Organic bamboo lyocell', price:'$$', range:'$40–$200',
+    aesthetics:['Trendy','Loungewear'],
+    summary:'HARA the Label turns bamboo into the softest underwear and basics you\'ve ever owned. Everything is made from organic bamboo lyocell — a fiber that\'s breathable, biodegradable, and incredibly gentle on skin.',
+    images:[
+      'https://hara.earth/cdn/shop/files/moonoil_lifestyle1_4_2_result.webp?v=1770342072&width=400',
+      'https://hara.earth/cdn/shop/files/moonoil_lifestyle1_59__result.webp?v=1770868356&width=400',
+      'https://hara.earth/cdn/shop/files/website_pdp_feature_butter1.webp?v=1761087622&width=500',
+    ]
+  },
+  {
+    name:'Le Bon Shoppe', url:'https://lebonshoppe.com', country:'USA — Los Angeles',
+    fibers:'Cotton, alpaca, mohair, cashmere, wool, modal', price:'$–$$', range:'$50–$200',
+    aesthetics:['Loungewear','Travel / Capsule','Minimalist'],
+    summary:'Le Bon Shoppe was born in a little LA apartment out of a love for vintage and natural textiles. They make the coziest knits and lounge pieces — the kind that become permanent fixtures in your wardrobe.',
+    images:[
+      'https://pipeandrow.com/cdn/shop/products/egretcreamgirlfriendsockslebonshoppe_pipeandrow_1536x2048.jpg?v=1602047654',
+      'https://i.ibb.co/7tkbt6Vw/Screenshot-2026-04-21-182237.png',
+      'https://lebonshoppe.com/cdn/shop/files/IMG_0941_6019b9f3-1702-4433-995b-399e22ac07c4.jpg?v=1776728577&width=1200',
+    ]
+  },
+  {
+    name:'Coed Collective', url:'https://coedcollective.com', country:'USA — Austin, Texas',
+    fibers:'Regenerative Organic Pima cotton', price:'$$$', range:'$50–$300',
+    aesthetics:['Minimalist','Travel / Capsule'],
+    summary:'COED Collective is American-made clothing in the truest sense: the cotton is grown in New Mexico using regenerative organic practices, and every garment is made in the USA. Unisex, minimal, built to last.',
+    images:[
+      'https://coedcollective.com/cdn/shop/articles/L1000969.png?v=1752672845',
+      'https://coedcollective.com/cdn/shop/files/7.png?v=1761141022&width=1500',
+      'https://i.ibb.co/jv6Jj4cK/Screenshot-2026-04-21-182732.png',
+    ]
+  },
+  {
+    name:'Asket', url:'https://www.asket.com', country:'Sweden — Stockholm',
+    fibers:'GOTS organic cotton, traceable merino wool, recycled wool, cashmere', price:'$$$', range:'$55–$450',
+    aesthetics:['Minimalist','Travel / Capsule','Workwear'],
+    summary:'Asket rejects the idea of seasons altogether — they make one permanent collection of essentials, obsessively refined. Swedish precision meets radical transparency: every garment comes with a full impact receipt.',
+    images:[
+      'https://i.ibb.co/vxtLRsrf/Screenshot-2026-04-21-183358.png',
+      'https://i.ibb.co/4xMg9dr/Screenshot-2026-04-21-183551.png',
+      'https://coolhunting.com/wp-content/uploads/2021/06/asket-womens-02-1024x768.jpg',
+    ]
+  },
+];
+const AESTHETICS = [
+  {
+    id:'minimalist', label:'Minimalist',
+    images:[
+      {src:'https://cdn.sanity.io/images/4ds6ga3z/productionv2/e6a95bb7e9519e8c9773f022c5301aa1a1a176a5-2070x1379.jpg?w=1920&q=75&fit=clip&auto=format', brand:'Kotn', url:'https://kotn.com'},
+      {src:'https://cdn.sanity.io/images/4ds6ga3z/productionv2/36686c85781bd7fe1f1368f6423ea6b2ad8d09f4-2572x4400.jpg?w=800&q=75&fit=clip&auto=format', brand:'Kotn', url:'https://kotn.com'},
+      {src:'https://cdn.sanity.io/images/4ds6ga3z/productionv2/3a25798fbbef8cd14756c1e65df897b1d57d61ac-2432x1824.jpg?w=1920&q=75&fit=clip&auto=format', brand:'Kotn', url:'https://kotn.com'},
+      {src:'https://matethelabel.com/cdn/shop/articles/JournalHeader_1_1512x.png?v=1741986603', brand:'MATE the Label', url:'https://matethelabel.com'},
+      {src:'https://i.ibb.co/whCSW48M/Screenshot-2026-04-20-235116.png', brand:'Rawganique', url:'https://rawganique.com'},
+      {src:'https://i.ibb.co/bMxbJhL2/Screenshot-2026-04-20-235136.png', brand:'Rawganique', url:'https://rawganique.com'},
+      {src:'https://manymoons.com/cdn/shop/files/ybjQ2VRtOXJPpTR8LdpthXILnPdt3yfm-bSJYk75wKg.jpg?v=1767262178&width=900', brand:'Beaumont Organic', url:'https://beaumont-organic.com'},
+      {src:'https://i.ibb.co/WNwZSGNY/Screenshot-2026-04-21-000817.png', brand:'Beaumont Organic', url:'https://beaumont-organic.com'},
+      {src:'https://i.ibb.co/TxnJcjx1/Screenshot-2026-04-21-000737.png', brand:'Beaumont Organic', url:'https://beaumont-organic.com'},
+      {src:'https://www.taylorstitch.com/cdn/shop/files/ts_q124_lookbook_05_414x.jpg?v=1665311671723965934', brand:'Taylor Stitch', url:'https://taylorstitch.com'},
+      {src:'https://i.ibb.co/JR9jJkB9/Screenshot-2026-04-21-001420.png', brand:'Taylor Stitch', url:'https://taylorstitch.com'},
+      {src:'https://yesfriends.co/cdn/shop/articles/ss25-yes-friends-ethical-sustainable-50_-05_dd30f95d-0ebd-4c06-9567-819fbc5b009c.jpg?v=1756310857&width=1080', brand:'Yes Friends', url:'https://yesfriends.co'},
+      {src:'https://www.honest-basics.com/cdn/shop/files/DSC_3043.jpg?v=1776083910&width=600', brand:'Honest Basics', url:'https://www.honest-basics.com'},
+      {src:'https://thegather.shop/cdn/shop/files/thegather-70.jpg?v=1772538434&width=1200', brand:'The Gather', url:'https://thegather.shop'},
+      {src:'https://coedcollective.com/cdn/shop/files/7.png?v=1761141022&width=1500', brand:'Coed Collective', url:'https://coedcollective.com'},
+      {src:'https://i.ibb.co/vxtLRsrf/Screenshot-2026-04-21-183358.png', brand:'Asket', url:'https://www.asket.com'},
+      {src:'https://i.ibb.co/4xMg9dr/Screenshot-2026-04-21-183551.png', brand:'Asket', url:'https://www.asket.com'},
+      {src:'https://i.ibb.co/7tkbt6Vw/Screenshot-2026-04-21-182237.png', brand:'Le Bon Shoppe', url:'https://lebonshoppe.com'},
+    ]
+  },
+  {
+    id:'quiet-luxury', label:'Quiet Luxury',
+    images:[
+      {src:'https://cdn.shopify.com/s/files/1/0123/5065/2473/files/journal_10-Recovered2.jpg?v=1768592104&format=webp&width=900&height=900', brand:'MATE the Label', url:'https://matethelabel.com'},
+      {src:'https://i.ibb.co/zTWR6WGD/Screenshot-2026-04-21-000535.png', brand:'Beaumont Organic', url:'https://beaumont-organic.com'},
+      {src:'https://i.ibb.co/6cTKj3pH/Screenshot-2026-04-21-000720.png', brand:'Beaumont Organic', url:'https://beaumont-organic.com'},
+      {src:'https://i.ibb.co/TBRWz0Lf/Screenshot-2026-04-21-000551.png', brand:'Beaumont Organic', url:'https://beaumont-organic.com'},
+      {src:'https://yoketokyo.com/cdn/shop/files/YOKE_FW25_LOOK_002_800x.jpg?v=1750998334', brand:'Yoke', url:'https://yoketokyo.com'},
+      {src:'https://yoketokyo.com/cdn/shop/files/YOKE_FW25_LOOK_004_800x.jpg?v=1750998347', brand:'Yoke', url:'https://yoketokyo.com'},
+      {src:'https://i.ibb.co/GvqJG283/Screenshot-2026-04-21-002227.png', brand:'Yoke', url:'https://yoketokyo.com'},
+      {src:'https://i.ibb.co/ML1xXLw/Screenshot-2026-04-21-005439.png', brand:'The Gather', url:'https://thegather.shop'},
+      {src:'https://i.ibb.co/WNQ3tJ2F/Screenshot-2026-04-21-011429.png', brand:'The Gather', url:'https://thegather.shop'},
+      {src:'https://i.ibb.co/B227RJ7B/Screenshot-2026-04-21-012752.png', brand:'Baukjen', url:'https://www.baukjen.com'},
+      {src:'https://www.baukjen.com/cdn/shop/files/lisa-side-stripe-trousers-plum-pink-white-tr40459-pph-6-trousers-baukjen-8599520.jpg?v=1772625361&width=1600', brand:'Baukjen', url:'https://www.baukjen.com'},
+      {src:'https://wraplondon.imgix.net/live/productimages/modelshots/AA_D2_S3_TD20A_TF93A_TF95A_TF44A_TF40A_0065_Full_SS26_Landscape.jpg?q=50&auto=format&ixlib=imgixjs-3.4.2&w=1446', brand:'Wrap London', url:'https://www.wraplondon.com'},
+      {src:'https://cdn.shopify.com/s/files/1/0123/5065/2473/files/LPCover_31f481a8-554d-4eb4-9942-98a0ec6f5730.jpg?v=1776442676&format=webp&width=900', brand:'Buck Mason', url:'https://www.buckmason.com'},
+      {src:'https://i.ibb.co/rf58H65h/Screenshot-2026-04-21-185614.png', brand:'Bae Mat Boa', url:'https://www.baematboa.com'},
+      {src:'https://i.ibb.co/dsxqyYDv/Screenshot-2026-04-21-185410.png', brand:'Bae Mat Boa', url:'https://www.baematboa.com'},
+    ]
+  },
+  {
+    id:'coastal', label:'Coastal / Beach',
+    images:[
+      {src:'https://wraplondon.imgix.net/live/productimages/modelshots/AP_D1_S1_TE86A_TF91A_TF48A_0003-1_Full_HS26_Portrait.jpg?q=50&auto=format&ixlib=imgixjs-3.4.2&w=688', brand:'Jungmaven', url:'https://jungmaven.com'},
+      {src:'https://i.ibb.co/Txh3yh1K/Screenshot-2026-04-20-235746.png', brand:'Jungmaven', url:'https://jungmaven.com'},
+      {src:'https://romontio.com/cdn/shop/files/5B45D73D-3C3F-4780-88D9-2FA2A590FA1C_1_201_a.jpg?v=1776086749&width=1500', brand:'Romonito', url:'https://romontio.com'},
+      {src:'https://i.ibb.co/1fqVk0TQ/Screenshot-2026-04-21-002823.png', brand:'Romonito', url:'https://romontio.com'},
+      {src:'https://i.ibb.co/393PLvjx/Screenshot-2026-04-21-002920.png', brand:'Romonito', url:'https://romontio.com'},
+      {src:'https://us.tbco.com/cdn/shop/files/TRFSTPKD-CottonTieTrouser_Green_BrownStripe-1.png?v=1773131913&width=1080', brand:'TBCo', url:'https://us.tbco.com'},
+      {src:'https://us.tbco.com/cdn/shop/files/SHHSTPKD-CottonTieShort_Pink_BurgundyStripe1.png?v=1773238566&width=1080', brand:'TBCo', url:'https://us.tbco.com'},
+      {src:'https://www.baukjen.com/cdn/shop/files/robyn-organic-cotton-stretch-jeans-soft-white-jn40071-sfw-6-jeans-baukjen-8210387.jpg?v=1772625455&width=1600', brand:'Baukjen', url:'https://www.baukjen.com'},
+      {src:'https://i.ibb.co/LXSZGhCH/Screenshot-2026-04-21-012506.png', brand:'Baukjen', url:'https://www.baukjen.com'},
+      {src:'https://wraplondon.imgix.net/live/frontpages/CU209/1h@2x.jpg?smpv=506&q=60&auto=format', brand:'Wrap London', url:'https://www.wraplondon.com'},
+      {src:'https://wraplondon.imgix.net/live/frontpages/CU209/3h@2x.jpg?smpv=506&q=60&auto=format', brand:'Wrap London', url:'https://www.wraplondon.com'},
+      {src:'https://shopslowsunday.com/cdn/shop/files/slowsunday-june-nightie-organic-cotton-nightgown-with-lace-trim.jpg?v=1776457593&width=1500', brand:'Slow Sunday', url:'https://shopslowsunday.com'},
+      {src:'https://i.ibb.co/NnV4F9Dg/Screenshot-2026-04-21-184635.png', brand:'Bae Mat Boa', url:'https://www.baematboa.com'},
+      {src:'https://i.ibb.co/Zz41jffs/Screenshot-2026-04-21-184719.png', brand:'Bae Mat Boa', url:'https://www.baematboa.com'},
+    ]
+  },
+  {
+    id:'bohemian', label:'Bohemian',
+    images:[
+      {src:'https://i.ibb.co/JFzJvzb0/Screenshot-2026-04-20-235718.png', brand:'Jungmaven', url:'https://jungmaven.com'},
+      {src:'https://i.ibb.co/MDrCYhPr/Screenshot-2026-04-20-235906.png', brand:'Jungmaven', url:'https://jungmaven.com'},
+      {src:'https://i.ibb.co/jky07R7z/Screenshot-2026-04-21-000116.png', brand:'Jungmaven', url:'https://jungmaven.com'},
+      {src:'https://i.ibb.co/rCCPYNX/Screenshot-2026-04-20-235031.png', brand:'Rawganique', url:'https://rawganique.com'},
+      {src:'https://media.licdn.com/dms/image/v2/D4E1BAQHQvLZQ7VNe2Q/company-background_10000/company-background_10000/0/1653679158131/beaumont_organic_cover?e=2147483647&v=beta&t=mDm2XN9jwi3dqRXiiAaEwheQJn_FZ4EJqfWUb9X1pn4', brand:'Beaumont Organic', url:'https://beaumont-organic.com'},
+      {src:'https://romontio.com/cdn/shop/articles/DSCN0025.jpg?v=1745188372&width=1500', brand:'Romonito', url:'https://romontio.com'},
+      {src:'https://romontio.com/cdn/shop/files/6D68E514-8B39-49E8-AE80-6C200A23A964_1_105_c.jpg?v=1769391796&width=1500', brand:'Romonito', url:'https://romontio.com'},
+      {src:'https://i.ibb.co/Y7h6mfkV/Screenshot-2026-04-21-002755.png', brand:'Romonito', url:'https://romontio.com'},
+      {src:'https://shopslowsunday.com/cdn/shop/files/SS_-_June_Nightie-2.jpg?v=1776457593&width=1500', brand:'Slow Sunday', url:'https://shopslowsunday.com'},
+      {src:'https://shopslowsunday.com/cdn/shop/files/275A3831.jpg?v=1775844998&width=940', brand:'Slow Sunday', url:'https://shopslowsunday.com'},
+      {src:'https://i.ibb.co/TDVBWxgD/Screenshot-2026-04-21-013416.png', brand:'Slow Sunday', url:'https://shopslowsunday.com'},
+      {src:'https://sonder.haus/cdn/shop/files/DSC_7029_960x1200_crop_center.jpg?v=1773086322', brand:'Sønderhaus', url:'https://sonder.haus'},
+      {src:'https://i.ibb.co/wNrfv1Nv/Screenshot-2026-04-21-181219.png', brand:'Sønderhaus', url:'https://sonder.haus'},
+      {src:'https://thegather.shop/cdn/shop/files/032717660022_22A.jpg?v=1754931123&width=1200', brand:'The Gather', url:'https://thegather.shop'},
+      {src:'https://i.ibb.co/cSvgZbFY/Screenshot-2026-04-21-005520.png', brand:'The Gather', url:'https://thegather.shop'},
+    ]
+  },
+  {
+    id:'loungewear', label:'Loungewear',
+    images:[
+      {src:'https://matethelabel.com/cdn/shop/articles/JournalHeader_1_1512x.png?v=1741986603', brand:'MATE the Label', url:'https://matethelabel.com'},
+      {src:'https://matethelabel.com/cdn/shop/files/Editorial-LOOK_04-Reformer_Class-0683_1.jpg?v=1754346620&width=1000', brand:'MATE the Label', url:'https://matethelabel.com'},
+      {src:'https://i.ibb.co/jZR0xjNt/Screenshot-2026-04-20-234555.png', brand:'MATE the Label', url:'https://matethelabel.com'},
+      {src:'https://i.ibb.co/QvvGvs52/Screenshot-2026-04-20-234747.png', brand:'MATE the Label', url:'https://matethelabel.com'},
+      {src:'https://i.ibb.co/rCCPYNX/Screenshot-2026-04-20-235031.png', brand:'Rawganique', url:'https://rawganique.com'},
+      {src:'https://i.ibb.co/gZ3Lx8Tq/Screenshot-2026-04-20-235101.png', brand:'Rawganique', url:'https://rawganique.com'},
+      {src:'https://i.ibb.co/ZRwvvvLc/Screenshot-2026-04-20-235205.png', brand:'Rawganique', url:'https://rawganique.com'},
+      {src:'https://boody.com/cdn/shop/files/test2_1512x.jpg?v=1706159655', brand:'BOODY', url:'https://boody.com'},
+      {src:'https://boody.com/cdn/shop/files/comforttttttt_1512x.jpg?v=1706159661', brand:'BOODY', url:'https://boody.com'},
+      {src:'https://www.honest-basics.com/cdn/shop/files/mega_menu_washed_desktop.jpg?v=1770193186&width=3600', brand:'Honest Basics', url:'https://www.honest-basics.com'},
+      {src:'https://us.tbco.com/cdn/shop/files/Build_Your_Own_Mother_s_Day_Gift_Box_1.jpg?v=1771923912&width=1080', brand:'TBCo', url:'https://us.tbco.com'},
+      {src:'https://cdn.shopify.com/s/files/1/0682/8471/1161/files/Get_Your_Home_Guest-Ready_with_Cosy_TBCo_Pieces_1.jpg?v=1761663719', brand:'TBCo', url:'https://us.tbco.com'},
+      {src:'https://hara.earth/cdn/shop/files/moonoil_lifestyle1_4_2_result.webp?v=1770342072&width=400', brand:'HARA the Label', url:'https://hara.earth'},
+      {src:'https://hara.earth/cdn/shop/files/website_pdp_feature_butter1.webp?v=1761087622&width=500', brand:'HARA the Label', url:'https://hara.earth'},
+      {src:'https://lebonshoppe.com/cdn/shop/files/BarePants_MossGreen_3.jpg?v=1772647250&width=1400', brand:'Le Bon Shoppe', url:'https://lebonshoppe.com'},
+      {src:'https://lebonshoppe.com/cdn/shop/files/IMG_0941_6019b9f3-1702-4433-995b-399e22ac07c4.jpg?v=1776728577&width=1200', brand:'Le Bon Shoppe', url:'https://lebonshoppe.com'},
+      {src:'https://i.ibb.co/mrc3pyqT/Screenshot-2026-04-21-182341.png', brand:'Le Bon Shoppe', url:'https://lebonshoppe.com'},
+    ]
+  },
+  {
+    id:'travel', label:'Travel / Capsule',
+    images:[
+      {src:'https://coedcollective.com/cdn/shop/articles/L1010258_1.jpg?v=1752672889&width=1500', brand:'Kotn', url:'https://kotn.com'},
+      {src:'https://cdn.sanity.io/images/4ds6ga3z/productionv2/b77022451253405b92d1ea80d5b94f34089ed298-1628x1178.jpg?w=1920&q=75&fit=clip&auto=format', brand:'Kotn', url:'https://kotn.com'},
+      {src:'https://www.taylorstitch.com/cdn/shop/files/ts_q124_lookbook_03_1000x.jpg?v=15965771810776987710', brand:'Taylor Stitch', url:'https://taylorstitch.com'},
+      {src:'https://www.taylorstitch.com/cdn/shop/files/ts_q124_lookbook_01_600x.jpg?v=10820219267703449581', brand:'Taylor Stitch', url:'https://taylorstitch.com'},
+      {src:'https://yesfriends.co/cdn/shop/articles/aw25-1-web-69_96aee70a-3de0-4776-b57f-814e1f4bc22a.jpg?v=1765379235&width=900', brand:'Yes Friends', url:'https://yesfriends.co'},
+      {src:'https://cdn.shopify.com/s/files/1/0543/2360/9773/files/ss25-yes-friends-ethical-sustainable-50_-64.jpg?v=1752161310', brand:'Yes Friends', url:'https://yesfriends.co'},
+      {src:'https://www.honest-basics.com/cdn/shop/files/collection_list_nadja_1.jpg?v=1776310230&width=1500', brand:'Honest Basics', url:'https://www.honest-basics.com'},
+      {src:'https://thegather.shop/cdn/shop/files/Screenshot_2026-01-19_at_09.29.30.png?v=1768814979&width=600', brand:'The Gather', url:'https://thegather.shop'},
+      {src:'https://i.ibb.co/hx1YbxV0/Screenshot-2026-04-21-182637.png', brand:'Coed Collective', url:'https://coedcollective.com'},
+      {src:'https://i.ibb.co/B5zXT6dJ/Screenshot-2026-04-21-182620.png', brand:'Coed Collective', url:'https://coedcollective.com'},
+      {src:'https://i.ibb.co/B2czdsyZ/Screenshot-2026-04-21-183611.png', brand:'Asket', url:'https://www.asket.com'},
+      {src:'https://i.ibb.co/RTGXhpF7/Screenshot-2026-04-21-183746.png', brand:'Asket', url:'https://www.asket.com'},
+      {src:'https://cdn.shopify.com/s/files/1/0123/5065/2473/files/LPCover_3_a5a49337-9a88-4b81-9548-14fc5e20c008.jpg?v=1768607908&format=webp&width=600', brand:'Buck Mason', url:'https://www.buckmason.com'},
+      {src:'https://lebonshoppe.com/cdn/shop/files/MasonCardi_Naturel_0.jpg?v=1775778360&width=1400', brand:'Le Bon Shoppe', url:'https://lebonshoppe.com'},
+    ]
+  },
+  {
+    id:'streetwear', label:'Streetwear',
+    images:[
+      {src:'https://i.ibb.co/nN5mYBNY/Screenshot-2026-04-20-235536.png', brand:'Kotn', url:'https://kotn.com'},
+      {src:'https://cdn.sanity.io/images/4ds6ga3z/productionv2/233018c0ec0582b5283f5dc1febd11564100d508-2448x1824.jpg?w=1920&q=75&fit=clip&auto=format', brand:'Kotn', url:'https://kotn.com'},
+      {src:'https://cdn.sanity.io/images/4ds6ga3z/productionv2/8d09ce47569986079cf259e5ca207623f7f9319d-2573x4400.jpg?w=800&q=75&fit=clip&auto=format', brand:'Kotn', url:'https://kotn.com'},
+      {src:'https://i.ibb.co/nN5mYBNY/Screenshot-2026-04-20-235536.png', brand:'Jungmaven', url:'https://jungmaven.com'},
+      {src:'https://i.ibb.co/dwG3tkXP/Screenshot-2026-04-20-235559.png', brand:'Jungmaven', url:'https://jungmaven.com'},
+      {src:'https://i.ibb.co/qMP1FNR5/Screenshot-2026-04-20-235834.png', brand:'Jungmaven', url:'https://jungmaven.com'},
+      {src:'https://images.squarespace-cdn.com/content/v1/58d6f8f646c3c4bebcacf90e/7dd3642e-7dd3-4b33-b50d-3668ad5912eb/YOKE_26ss-037.jpg?format=750w', brand:'Yoke', url:'https://yoketokyo.com'},
+      {src:'https://i.ibb.co/x886FG5d/Screenshot-2026-04-21-002332.png', brand:'Yoke', url:'https://yoketokyo.com'},
+    ]
+  },
+  {
+    id:'workwear', label:'Workwear',
+    images:[
+      {src:'https://i.ibb.co/zTWR6WGD/Screenshot-2026-04-21-000535.png', brand:'Beaumont Organic', url:'https://beaumont-organic.com'},
+      {src:'https://i.ibb.co/TBRWz0Lf/Screenshot-2026-04-21-000551.png', brand:'Beaumont Organic', url:'https://beaumont-organic.com'},
+      {src:'https://i.ibb.co/1f5nn3ZS/Screenshot-2026-04-21-183508.png', brand:'Asket', url:'https://www.asket.com'},
+      {src:'https://i.ibb.co/mCxmyrys/Screenshot-2026-04-21-183521.png', brand:'Asket', url:'https://www.asket.com'},
+      {src:'https://i.ibb.co/1tGhrM3q/Screenshot-2026-04-21-183533.png', brand:'Asket', url:'https://www.asket.com'},
+      {src:'https://cdn.shopify.com/s/files/1/0123/5065/2473/files/LPCover_31f481a8-554d-4eb4-9942-98a0ec6f5730.jpg?v=1776442676&format=webp&width=900', brand:'Buck Mason', url:'https://www.buckmason.com'},
+      {src:'https://cdn.shopify.com/s/files/1/0123/5065/2473/files/journal_10-Recovered2.jpg?v=1768592104&format=webp&width=900', brand:'Buck Mason', url:'https://www.buckmason.com'},
+      {src:'https://i.ibb.co/rn4PZwX/Screenshot-2026-04-21-182326.png', brand:'Le Bon Shoppe', url:'https://lebonshoppe.com'},
+    ]
+  },
+  {
+    id:'trendy', label:'Trendy',
+    images:[
+      {src:'https://us.tbco.com/cdn/shop/files/TSAPRBGD-CottonT-Shirt_Snake-1.png?v=1773132095&width=1080', brand:'Yoke', url:'https://yoketokyo.com'},
+      {src:'https://romontio.com/cdn/shop/files/Untitled_design.jpg?v=1776299103&width=1500', brand:'Romonito', url:'https://romontio.com'},
+      {src:'https://cdn.shopify.com/s/files/1/0682/8471/1161/files/TBCo_at_Copenhagen_Fashion_Week_-_1.jpg?v=1769776531', brand:'TBCo', url:'https://us.tbco.com'},
+      {src:'https://cdn.shopify.com/s/files/1/0682/8471/1161/files/TBCo_at_Copenhagen_Fashion_Week_-_Emma_MacDonald.jpg?v=1769776532', brand:'TBCo', url:'https://us.tbco.com'},
+      {src:'https://us.tbco.com/cdn/shop/files/TSAPRBGD-CottonT-Shirt_Snake-1.png?v=1773132095&width=1080', brand:'TBCo', url:'https://us.tbco.com'},
+      {src:'https://i.ibb.co/wh7FwfWs/Screenshot-2026-04-21-012554.png', brand:'Baukjen', url:'https://www.baukjen.com'},
+      {src:'https://i.ibb.co/Fbp7zTRt/Screenshot-2026-04-21-012627.png', brand:'Baukjen', url:'https://www.baukjen.com'},
+      {src:'https://wraplondon.imgix.net/live/frontpages/CU209/4h@2x.jpg?smpv=506&q=60&auto=format', brand:'Wrap London', url:'https://www.wraplondon.com'},
+      {src:'https://shopslowsunday.com/cdn/shop/files/275A3831.jpg?v=1775844998&width=940', brand:'Slow Sunday', url:'https://shopslowsunday.com'},
+      {src:'https://i.ibb.co/G47DMhmH/Screenshot-2026-04-21-013457.png', brand:'Slow Sunday', url:'https://shopslowsunday.com'},
+      {src:'https://cdn.shopify.com/s/files/1/0662/6790/6268/files/New_mobile_landing_page_5_9fbc9cc0-b0ea-41af-be52-ff288a878d3e.png?v=1774908161&width=1280', brand:'Sønderhaus', url:'https://sonder.haus'},
+      {src:'https://hara.earth/cdn/shop/files/leo_earth_lifestyle1_3__result_690x924.webp?v=1765950449', brand:'HARA the Label', url:'https://hara.earth'},
+      {src:'https://hara.earth/cdn/shop/files/website_homepage_reviews1.jpg?v=1760402801&width=500', brand:'HARA the Label', url:'https://hara.earth'},
+    ]
+  },
+  {
+    id:'edgy', label:'Edgy',
+    images:[
+      {src:'https://yoketokyo.com/cdn/shop/files/YOKE_FW25_LOOK_007_800x.jpg?v=1750998346', brand:'Yoke', url:'https://yoketokyo.com'},
+      {src:'https://yoketokyo.com/cdn/shop/files/YK26SS01212SH_MONOTONE.jpg?v=1775436986&width=600', brand:'Yoke', url:'https://yoketokyo.com'},
+      {src:'https://i.ibb.co/FqXSMVDc/Screenshot-2026-04-21-002148.png', brand:'Yoke', url:'https://yoketokyo.com'},
+      {src:'https://i.ibb.co/xq4G641d/Screenshot-2026-04-21-002206.png', brand:'Yoke', url:'https://yoketokyo.com'},
+      {src:'https://i.ibb.co/FFbxCjg/Screenshot-2026-04-21-002243.png', brand:'Yoke', url:'https://yoketokyo.com'},
+    ]
+  },
+];
+const BRANDS = [  {
+    name:'TBCo', url:'https://us.tbco.com', country:'UK',
+    fibers:'Cotton, wool, cashmere', price:'$$', range:'$50–$150',
+    aesthetics:['Trendy','Loungewear','Coastal / Beach'],
+    summary:'TBCo offers unique and fun pieces that are all 100% natural or recycled materials and is B-Corp certified. Their playful prints and relaxed silhouettes make sustainable fashion feel joyful.',
+    images:[
+      'https://us.tbco.com/cdn/shop/files/Build_Your_Own_Mother_s_Day_Gift_Box_1.jpg?v=1771923912&width=1080',
+      'https://cdn.shopify.com/s/files/1/0682/8471/1161/files/TBCo_at_Copenhagen_Fashion_Week_-_1.jpg?v=1769776531',
+      'https://cdn.shopify.com/s/files/1/0682/8471/1161/files/TBCo_at_Copenhagen_Fashion_Week_-_5.jpg?v=1769776531',
+      'https://us.tbco.com/cdn/shop/files/TSAPRBGD-CottonT-Shirt_Snake-1.png?v=1773132095&width=1080',
+    ]
+  },
+  {
+    name:'The Gather', url:'https://thegather.shop', country:'UK',
+    fibers:'Wool, cashmere, lambswool', price:'$$–$$$', range:'$100–$300',
+    aesthetics:['Travel / Capsule','Bohemian','Quiet Luxury','Minimalist'],
+    summary:'The Gather offers soft and elegant knitwear meant to last. Each piece is crafted with care using the finest natural fibers — the kind of knit you keep for decades.',
+    images:[
+      'https://i.ibb.co/ML1xXLw/Screenshot-2026-04-21-005439.png',
+      'https://thegather.shop/cdn/shop/collections/Screenshot_2026-01-19_at_09.32.58.png?v=1768815259&width=1500',
+      'https://i.ibb.co/Txd4hSC0/Screenshot-2026-04-21-011328.png',
+      'https://thegather.shop/cdn/shop/files/thegather-70.jpg?v=1772538434&width=1200',
+    ]
+  },
+  {
+    name:'Slow Sunday', url:'https://shopslowsunday.com', country:'',
+    fibers:'Organic cotton, linen', price:'$–$$$', range:'$42–$300',
+    aesthetics:['Bohemian','Coastal / Beach','Trendy'],
+    summary:'Slow Sunday embraces the pace its name suggests — ethically made pieces designed to slow down consumption. Their dreamy linen and cotton pieces are feminine, considered, and made to last.',
+    images:[
+      'https://i.ibb.co/rRQjGVjp/Screenshot-2026-04-21-013518.png',
+      'https://shopslowsunday.com/cdn/shop/files/slowsunday-june-nightie-organic-cotton-nightgown-with-lace-trim.jpg?v=1776457593&width=1500',
+      'https://shopslowsunday.com/cdn/shop/files/IMG_1722.jpg?v=1775844998&width=1500',
+    ]
+  },
+  {
+    name:'Buck Mason', url:'https://www.buckmason.com', country:'USA — Venice, California',
+    fibers:'Cotton, linen, wool, selvedge denim, cashmere', price:'$$$', range:'$50–$300',
+    aesthetics:['Workwear','Travel / Capsule','Quiet Luxury'],
+    summary:'Buck Mason makes the kind of American wardrobe classics that look better the more you wear them. Proper fabrics, proper construction — no compromises on quality or sustainability credentials.',
+    images:[
+      'https://cdn.shopify.com/s/files/1/0123/5065/2473/files/LPCover_31f481a8-554d-4eb4-9942-98a0ec6f5730.jpg?v=1776442676&format=webp&width=900&height=900',
+      'https://cdn.shopify.com/s/files/1/0123/5065/2473/files/journal_10-Recovered2.jpg?v=1768592104&format=webp&width=900&height=900',
+      'https://cdn.shopify.com/s/files/1/0123/5065/2473/files/LPCover_1_45d83f1f-6d2b-475f-af4f-8cad0354957f.jpg?v=1775695513&format=webp&width=600&height=600',
+    ]
+  },
+  {
+    name:'Bae Mat Boa', url:'https://www.baematboa.com', country:'France — Brittany',
+    fibers:'Cotton poplin, natural artisanal fabrics', price:'$$$', range:'$140–$300',
+    aesthetics:['Coastal / Beach','Quiet Luxury'],
+    summary:'BaeMat Boa is artisanal fashion in its purest form — hand-cut, hand-embroidered, and made to order from a small studio in Brittany, France. Every piece is unique.',
+    images:[
+      'https://i.ibb.co/Zz41jffs/Screenshot-2026-04-21-184719.png',
+      'https://i.ibb.co/mVqRXM44/Screenshot-2026-04-21-185657.png',
+      'https://i.ibb.co/rf58H65h/Screenshot-2026-04-21-185614.png',
+    ]
+  },
+  {
+    name:'Kotn', url:'https://kotn.com', country:'Canada',
+    fibers:'Egyptian cotton, linen', price:'$$', range:'$60–$120',
+    aesthetics:['Minimalist','Travel / Capsule','Streetwear'],
+    summary:'Kotn makes the kind of wardrobe basics you\'ll actually wear for years — clean cuts in genuinely soft Egyptian cotton. No greenwashing, no vague claims: they publish their full supply chain and invest directly in the farming communities they work with.',
+    images:[
+      'https://cdn.sanity.io/images/4ds6ga3z/productionv2/233018c0ec0582b5283f5dc1febd11564100d508-2448x1824.jpg?w=1920&q=75&fit=clip&auto=format',
+      'https://cdn.sanity.io/images/4ds6ga3z/productionv2/7d37f1d87730be88a7ff24250bedb1f13636d522-1796x956.jpg?w=1920&q=75&fit=clip&auto=format',
+      'https://cdn.sanity.io/images/4ds6ga3z/productionv2/3f20fa2cbc3b181b5a30136443135ec2d831e424-1796x896.jpg?w=1920&q=75&fit=clip&auto=format',
+    ]
+  },
+  {
+    name:'MATE the Label', url:'https://matethelabel.com', country:'USA — Los Angeles',
+    fibers:'Organic cotton', price:'$$$', range:'$80–$160',
+    aesthetics:['Minimalist','Quiet Luxury','Loungewear'],
+    summary:'If you want organic cotton that actually feels luxurious, MATE the Label is the answer. Everything is made within 10 miles of their LA studio — which means a smaller carbon footprint and real accountability over working conditions.',
+    images:[
+      'https://outofofficemode.com/wp-content/uploads/2022/04/MATE-the-Label-Fleece-Close-Up-scaled.jpg',
+      'https://i.ibb.co/yBMMk99H/Screenshot-2026-04-21-195150.png',
+      'https://i.ibb.co/vCNf0KKy/Screenshot-2026-04-22-041501.png',
+    ]
+  },
+  {
+    name:'Rawganique', url:'https://rawganique.com', country:'USA / Canada',
+    fibers:'Organic cotton, linen, hemp, merino wool', price:'$$', range:'$40–$100',
+    aesthetics:['Minimalist','Bohemian','Loungewear'],
+    summary:'Rawganique is for people who want clothing with zero compromises — no polyester, no elastane, no synthetic dyes. They\'ve been doing this since 1997, making them one of the most experienced natural fiber brands on the market.',
+    images:[
+      'https://rawganique.com/cdn/shop/files/mariana-atelier-slippers-20240529-DSCF7786-3_450x.jpg?v=1719820683',
+      'https://i.ibb.co/7dRR9hFc/Screenshot-2026-04-22-041738.png',
+      'https://i.ibb.co/7DKrH2F/Screenshot-2026-04-22-041909.png',
+    ]
+  },
+  {
+    name:'Jungmaven', url:'https://jungmaven.com', country:'USA — Los Angeles',
+    fibers:'Hemp, organic cotton', price:'$$', range:'$50–$95',
+    aesthetics:['Streetwear','Coastal / Beach','Bohemian'],
+    summary:'Jungmaven makes the kind of casual tees you reach for every day — cut in LA from hemp-cotton blends that are softer than regular cotton and more durable too. The coastal, laid-back aesthetic makes them easy to wear anywhere.',
+    images:[
+      'https://i.ibb.co/TqqCCFBG/Screenshot-2026-04-22-042523.png',
+      'https://i.ibb.co/wryMN5R3/Screenshot-2026-04-22-042606.png',
+      'https://images.ctfassets.net/lm5017k93tvi/s6hiOUneBNue8OfXBXhHC/30b43fa65185661bc8541658c8d9f341/JMResale_mission.jpg?w=1200&fm=jpg',
+    ]
+  },
+  {
+    name:'Beaumont Organic', url:'https://beaumont-organic.com', country:'UK',
+    fibers:'GOTS organic cotton', price:'$$$', range:'$90–$200',
+    aesthetics:['Quiet Luxury','Workwear','Minimalist','Bohemian'],
+    summary:'Beaumont Organic fills the gap between sustainable and polished — their pieces look like they belong in a fashion editorial but are made entirely in certified organic cotton in EU factories.',
+    images:[
+      'https://www.beaumontorganic.com/cdn/shop/files/DSC06735.jpg?v=1770806339&width=720',
+      'https://www.beaumontorganic.com/cdn/shop/files/Beaumontorganic6864f8ce4ab8a1113590086864f8ce4ab91.6864f8ce4ab91.jpg?v=1772055348&width=720',
+      'https://i.ibb.co/gZrvS5pL/Screenshot-2026-04-21-000835.png',
+    ]
+  },
+  {
+    name:'Taylor Stitch', url:'https://taylorstitch.com', country:'USA — San Francisco',
+    fibers:'Organic cotton, linen, hemp, wool', price:'$$$', range:'$90–$250',
+    aesthetics:['Travel / Capsule','Minimalist'],
+    summary:'Taylor Stitch is a masterclass in making clothes built to last. Their Workshop model means they only produce what people actually want — no overstock, no waste. The quality is exceptional across linen, hemp, and organic cotton.',
+    images:[
+      'https://www.taylorstitch.com/cdn/shop/files/ts_q12026_dispatch_blog_image_q1lookbook_06_1000x.jpg?v=7864276213778154028',
+      'https://www.taylorstitch.com/cdn/shop/files/ts_q12026_dispatch_blog_image_q1lookbook_24_1000x.jpg?v=8791276521345007686',
+      'https://assets.mr-mag.com/2022/12/Shot18_0367.jpg',
+    ]
+  },
+  {
+    name:'Yoke', url:'https://yoketokyo.com', country:'Tokyo, Japan',
+    fibers:'Brewed Protein™, wool, cashmere, cotton, linen, alpaca', price:'$$$$', range:'$200–$600',
+    aesthetics:['Trendy','Streetwear','Quiet Luxury','Edgy'],
+    summary:'Luxury done in an ethical way. Unique and unisex pieces meant to last. The designer works with local artisans and uses innovative natural materials including bio-based Brewed Protein™ fibers.',
+    images:[
+      'https://yoketokyo.com/cdn/shop/articles/D5N5004_2000x.jpg?v=1764557833',
+      'https://yoketokyo.com/cdn/shop/files/IMG_6547_2f783351-f2e3-4beb-a22a-541ba3a58845.jpg?v=1775527016&width=3000',
+      'https://i.ibb.co/zVvfkxSH/Screenshot-2026-04-22-043508.png',
+    ]
+  },
+  {
+    name:'Romonito', url:'https://romontio.com', country:'New York City',
+    fibers:'Linen, silk, cotton', price:'$$', range:'$100–$200',
+    aesthetics:['Bohemian','Coastal / Beach','Trendy'],
+    summary:'A small company based in NYC committed to producing ethical and sustainable clothing. With linen as its hero fiber, Romonito creates romantic, textural pieces that feel handcrafted and alive.',
+    images:[
+      'https://romontio.com/cdn/shop/files/Untitled_design.jpg?v=1776299103&width=1500',
+      'https://i.ibb.co/wFFKLYxT/Screenshot-2026-04-22-043652.png',
+      'https://i.ibb.co/GfVHP0Fp/Screenshot-2026-04-22-043726.png',
+      'https://i.ibb.co/CKbpr2pq/Screenshot-2026-04-22-043804.png',
+    ]
+  },
+  {
+    name:'Yes Friends', url:'https://yesfriends.co', country:'UK',
+    fibers:'Organic cotton', price:'$', range:'$20–$100',
+    aesthetics:['Travel / Capsule','Minimalist'],
+    summary:'Yes Friends mission is to provide sustainable clothing at an affordable cost. They do so by growing their own organic cotton and keeping their supply chain radically transparent.',
+    images:[
+      'https://yesfriends.co/cdn/shop/files/ethical-sustainable-affordable-organic-cotton-26.jpg?v=1728578132',
+      'https://i.ibb.co/GfGqqhWv/Screenshot-2026-04-22-044321.png',
+      'https://yesfriends.co/cdn/shop/collections/ss25-yes-friends-ethical-sustainable-50_-42.jpg?crop=center&height=1439&v=1767607097&width=1200',
+    ]
+  },
+  {
+    name:'BOODY', url:'https://boody.com', country:'Australia',
+    fibers:'Organic bamboo viscose', price:'$', range:'$20–$100',
+    aesthetics:['Loungewear'],
+    summary:'BOODY focuses on comfort with their one-of-a-kind organic bamboo viscose, made to be more breathable and softer than conventional cotton. Their basics are perfect for everyday wear and lounging.',
+    images:[
+      'https://boody.com/cdn/shop/files/test2_1512x.jpg?v=1706159655',
+      'https://boody.com/cdn/shop/files/Why_Bamboo_Copy_1512x.jpg?v=1707705133',
+      'https://boody.com/cdn/shop/files/comforttttttt_1512x.jpg?v=1706159661',
+    ]
+  },
+  {
+    name:'Honest Basics', url:'https://www.honest-basics.com', country:'Berlin, Germany',
+    fibers:'Organic cotton, recycled cotton, recycled wool', price:'$', range:'$10–$100',
+    aesthetics:['Loungewear','Travel / Capsule','Minimalist'],
+    summary:'Honest Basics focuses on transparency throughout the whole production of an item. They offer affordable, well-made pieces with a clear conscience — ideal for building a no-fuss sustainable wardrobe.',
+    images:[
+      'https://sustainablereview.com//wp-content/uploads/2023/10/pasted-image-0-2023-10-19T142002.954.png',
+      'https://i.ibb.co/r2LXQH6K/Screenshot-2026-04-22-045532.png',
+      'https://www.honest-basics.com/cdn/shop/files/mega_menu_washed_desktop.jpg?v=1770193186&width=3600',
+    ]
+  },
+  {
+    name:'Baukjen', url:'https://www.baukjen.com', country:'UK — London',
+    fibers:'Organic cotton, wool, viscose', price:'$$$', range:'$150–$300',
+    aesthetics:['Coastal / Beach','Trendy','Quiet Luxury'],
+    summary:'Baukjen is proof that polished, fashion-forward womenswear and sustainability can coexist. As one of the UK\'s most established sustainable labels, they lead on organic materials and ethical production.',
+    images:[
+      'https://i.ibb.co/wh7FwfWs/Screenshot-2026-04-21-012554.png',
+      'https://i.ibb.co/qFpY8vkL/Screenshot-2026-04-21-012529.png',
+      'https://www.baukjen.com/cdn/shop/files/robyn-organic-cotton-stretch-jeans-soft-white-jn40071-sfw-6-jeans-baukjen-8210387.jpg?v=1772625455&width=1600',
+    ]
+  },
+  {
+    name:'Wrap London', url:'https://www.wraplondon.com', country:'UK — London',
+    fibers:'Cotton, linen, hemp, wool, alpaca', price:'$$$', range:'$100–$300',
+    aesthetics:['Coastal / Beach','Trendy','Quiet Luxury'],
+    summary:'Wrap London is a quiet, small-batch London label built around a single idea: buy once, buy best. Almost their entire collection uses natural or responsibly sourced fibers.',
+    images:[
+      'https://wraplondon.imgix.net/live/frontpages/CU209/1h@2x.jpg?smpv=506&q=60&auto=format',
+      'https://wraplondon.imgix.net/live/productimages/modelshots/AA_D2_S3_TD20A_TF93A_TF95A_TF44A_TF40A_0065_Full_SS26_Landscape.jpg?q=50&auto=format&ixlib=imgixjs-3.4.2&w=1446',
+      'https://wraplondon.imgix.net/live/productimages/modelshots/AP_D1_S8_TE68A_TA21C_0056-3_Story_HS26_Portrait.jpg?q=50&auto=format&ixlib=imgixjs-3.4.2&w=688',
+    ]
+  },
+  {
+    name:'Coco Maisonette', url:'https://cocomaisonette.com', country:'USA — Southern California',
+    fibers:'Deadstock fabrics, reclaimed cotton, natural organic fibers', price:'$$', range:'$48–$138',
+    aesthetics:['Bohemian','Coastal / Beach','Loungewear'],
+    summary:'Coco Maisonette is a slow fashion community building clothes the intentional way. Every piece is cut from deadstock or reclaimed fabrics in Southern California — minimal waste, maximum soul.',
+    images:[
+      'https://cocomaisonette.com/cdn/shop/files/IMG_0739.jpg?v=1763332976&width=533',
+      'https://cocomaisonette.com/cdn/shop/files/IMG_48112.jpg?v=1746828872',
+      'https://cocomaisonette.com/cdn/shop/files/IMG_4712.jpg?v=1746828090&width=1946',
+    ]
+  },
+  {
+    name:'Gillian Stevens', url:'https://gillianstevens.co', country:'Canada — Vancouver',
+    fibers:'Organic cotton (Peruvian), linen (Lithuanian), wool, alpaca', price:'$$$', range:'$135–$400',
+    aesthetics:['Bohemian'],
+    summary:'Gillian Stevens is a Vancouver-based womenswear label built around natural fibers and the people who make them. Each piece is thoughtfully designed for longevity, not trends.',
+    images:[
+      'https://gillianstevens.co/cdn/shop/files/TessaComrie_GillianStevens_Mendocino-000030440014.jpg?v=1738454224',
+      'https://gillianstevens.co/cdn/shop/files/1P0A2151.png?v=1776257849&width=3840',
+      'https://gillianstevens.co/cdn/shop/files/1P0A9198_9fbeea57-4c0f-4571-892c-8483f646d386.png?v=1773240483&width=3840',
+    ]
+  },
+  {
+    name:'Sønderhaus', url:'https://sonder.haus', country:'USA — Salt Lake City',
+    fibers:'Organic cotton, wool', price:'$$', range:'$40–$150',
+    aesthetics:['Trendy','Bohemian'],
+    summary:'Run by three sisters and their best friend out of Salt Lake City, Sønderhaus makes thoughtfully designed natural fiber pieces with a warm, personal energy you can feel in every stitch.',
+    images:[
+      'https://cdn.shopify.com/s/files/1/0662/6790/6268/files/New_mobile_landing_page_5_9fbc9cc0-b0ea-41af-be52-ff288a878d3e.png?v=1774908161&width=1280',
+      'https://sonder.haus/cdn/shop/files/DSC_8027.jpg?v=1773086286&width=720',
+      'https://i.ibb.co/B5FG5GT9/Screenshot-2026-04-21-181107.png',
+    ]
+  },
+  {
+    name:'HARA the Label', url:'https://hara.earth', country:'Australia',
+    fibers:'Organic bamboo lyocell', price:'$$', range:'$40–$200',
+    aesthetics:['Trendy','Loungewear'],
+    summary:'HARA the Label turns bamboo into the softest underwear and basics you\'ve ever owned. Everything is made from organic bamboo lyocell — a fiber that\'s breathable, biodegradable, and incredibly gentle on skin.',
+    images:[
+      'https://hara.earth/cdn/shop/files/moonoil_lifestyle1_4_2_result.webp?v=1770342072&width=400',
+      'https://hara.earth/cdn/shop/files/moonoil_lifestyle1_59__result.webp?v=1770868356&width=400',
+      'https://hara.earth/cdn/shop/files/website_pdp_feature_butter1.webp?v=1761087622&width=500',
+    ]
+  },
+  {
+    name:'Le Bon Shoppe', url:'https://lebonshoppe.com', country:'USA — Los Angeles',
+    fibers:'Cotton, alpaca, mohair, cashmere, wool, modal', price:'$–$$', range:'$50–$200',
+    aesthetics:['Loungewear','Travel / Capsule','Minimalist'],
+    summary:'Le Bon Shoppe was born in a little LA apartment out of a love for vintage and natural textiles. They make the coziest knits and lounge pieces — the kind that become permanent fixtures in your wardrobe.',
+    images:[
+      'https://pipeandrow.com/cdn/shop/products/egretcreamgirlfriendsockslebonshoppe_pipeandrow_1536x2048.jpg?v=1602047654',
+      'https://i.ibb.co/7tkbt6Vw/Screenshot-2026-04-21-182237.png',
+      'https://lebonshoppe.com/cdn/shop/files/IMG_0941_6019b9f3-1702-4433-995b-399e22ac07c4.jpg?v=1776728577&width=1200',
+    ]
+  },
+  {
+    name:'Coed Collective', url:'https://coedcollective.com', country:'USA — Austin, Texas',
+    fibers:'Regenerative Organic Pima cotton', price:'$$$', range:'$50–$300',
+    aesthetics:['Minimalist','Travel / Capsule'],
+    summary:'COED Collective is American-made clothing in the truest sense: the cotton is grown in New Mexico using regenerative organic practices, and every garment is made in the USA. Unisex, minimal, built to last.',
+    images:[
+      'https://coedcollective.com/cdn/shop/articles/L1000969.png?v=1752672845',
+      'https://coedcollective.com/cdn/shop/files/7.png?v=1761141022&width=1500',
+      'https://i.ibb.co/jv6Jj4cK/Screenshot-2026-04-21-182732.png',
+    ]
+  },
+  {
+    name:'Asket', url:'https://www.asket.com', country:'Sweden — Stockholm',
+    fibers:'GOTS organic cotton, traceable merino wool, recycled wool, cashmere', price:'$$$', range:'$55–$450',
+    aesthetics:['Minimalist','Travel / Capsule','Workwear'],
+    summary:'Asket rejects the idea of seasons altogether — they make one permanent collection of essentials, obsessively refined. Swedish precision meets radical transparency: every garment comes with a full impact receipt.',
+    images:[
+      'https://i.ibb.co/vxtLRsrf/Screenshot-2026-04-21-183358.png',
+      'https://i.ibb.co/4xMg9dr/Screenshot-2026-04-21-183551.png',
+      'https://coolhunting.com/wp-content/uploads/2021/06/asket-womens-02-1024x768.jpg',
+    ]
+  },
+];
+
+// ── NAVIGATION ──────────────────────────────────────────────────────────────
+function showPage(id) {
+  // hide all pages
+  document.getElementById('pg-home').classList.remove('on');
+  document.getElementById('pg-aes').classList.remove('on');
+  document.getElementById('pg-brands').classList.remove('on');
+
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+  document.documentElement.scrollTop = 0;
+
+  const nav = document.getElementById('nav');
+  const logo = document.getElementById('nav-logo');
+  const aesbtn = document.getElementById('nav-aes-btn');
+  const brbtn  = document.getElementById('nav-brands-btn');
+
+  if (id === 'pg-home') {
+    nav.className = '';
+    logo.style.color = 'var(--cream)';
+    aesbtn.style.color = 'rgba(247,243,238,0.55)';
+    brbtn.style.color  = 'rgba(247,243,238,0.55)';
+  } else {
+    nav.className = 'light';
+    logo.style.color = 'var(--dark)';
+    aesbtn.style.color = 'var(--muted)';
+    brbtn.style.color  = 'var(--muted)';
+  }
+}
+
+function goHome()   { showPage('pg-home'); }
+function goAes()    { showPage('pg-aes'); }
+function goBrands() { showPage('pg-brands'); }
+
+// ── AESTHETICS ──────────────────────────────────────────────────────────────
+function buildAesthetics() {
+  const tilesWrap = document.getElementById('aes-tiles');
+
+  AESTHETICS.forEach((aes, idx) => {
+    const bgSrc = aes.images.length > 0 ? aes.images[0].src : '';
+    const tile = document.createElement('div');
+    tile.className = 'aes-tile';
+    tile.innerHTML =
+      '<div class="aes-tile-bg" style="background-image:url('' + bgSrc + '')"></div>' +
+      '<div class="aes-tile-overlay"></div>' +
+      '<div class="aes-tile-content">' +
+        '<span class="aes-tile-num">0' + (idx+1) + '</span>' +
+        '<span class="aes-tile-name">' + aes.label + '</span>' +
+        '<span class="aes-tile-count">' + aes.images.length + ' looks</span>' +
+        '<span class="aes-tile-cta">Explore →</span>' +
+      '</div>';
+
+    (function(a){ tile.addEventListener('click', function(){ openAesGallery(a); }); })(aes);
+    tilesWrap.appendChild(tile);
+  });
+}
+
+function openAesGallery(aes) {
+  // populate grid
+  const grid = document.getElementById('aes-gallery-grid');
+  grid.innerHTML = '';
+  document.getElementById('aes-gallery-title').textContent = aes.label;
+
+  aes.images.forEach(function(img) {
+    var cell = document.createElement('div');
+    cell.className = 'aes-grid-item';
+    cell.innerHTML =
+      '<img src="' + img.src + '" alt="' + img.brand + '" loading="lazy"/>' +
+      '<div class="aes-grid-caption">' +
+        '<div class="aes-grid-caption-brand">' + img.brand + '</div>' +
+        '<span class="aes-grid-caption-link">Visit brand →</span>' +
+      '</div>';
+    (function(i){ cell.addEventListener('click', function(){ openModal(i.src, i.brand, i.url, aes.label); }); })(img);
+    grid.appendChild(cell);
+  });
+
+  // swap views
+  document.getElementById('aes-main').style.display = 'none';
+  document.getElementById('aes-gallery-view').style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+function closeAesGallery() {
+  document.getElementById('aes-gallery-view').style.display = 'none';
+  document.getElementById('aes-main').style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+// back button — attached once, no inline onclick
+document.getElementById('aes-back').addEventListener('click', function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  closeAesGallery();
+});
+
+// ── BRANDS ──────────────────────────────────────────────────────────────────
+var PRICE_ORDER = {'$':1,'$$':2,'$$$':3,'$$$$':4,'$–$$$':2,'$$–$$$':2};
+
+function renderBrandRow(brand, idx) {
+  var list = document.getElementById('brands-list');
+  var row  = document.createElement('div');
+  row.className = 'brand-row';
+  var tags = brand.aesthetics.map(function(t){ return '<span class="brand-tag">'+t+'</span>'; }).join('');
+
+  row.innerHTML =
+    '<div class="brand-info">' +
+      '<span class="brand-num">' + String(idx+1).padStart(2,'0') + '</span>' +
+      '<h2 class="brand-name">' + brand.name + '</h2>' +
+      '<span class="brand-origin">' + brand.country + '</span>' +
+      '<p class="brand-summary">' + brand.summary + '</p>' +
+      '<p class="brand-fibers">' + brand.fibers + '</p>' +
+      '<div class="brand-price-row">' +
+        '<span class="brand-price">' + brand.price + '</span>' +
+        '<span class="brand-price-range">' + brand.range + '</span>' +
+      '</div>' +
+      '<div class="brand-tags">' + tags + '</div>' +
+      '<a class="brand-visit" href="' + brand.url + '" target="_blank">Visit ' + brand.name + ' →</a>' +
+    '</div>';
+
+  if (brand.images.length > 0) {
+    var imgWrap = document.createElement('div');
+    imgWrap.className = 'brand-images-wrap';
+    brand.images.forEach(function(src) {
+      var item = document.createElement('div');
+      item.className = 'brand-img-item';
+      item.innerHTML = '<img src="' + src + '" alt="' + brand.name + '" loading="lazy"/>';
+      (function(s){ item.addEventListener('click', function(){ openModal(s, brand.name, brand.url, brand.fibers); }); })(src);
+      imgWrap.appendChild(item);
+    });
+    var hint = document.createElement('div');
+    hint.className = 'scroll-hint';
+    hint.textContent = 'scroll';
+    imgWrap.appendChild(hint);
+    var isDown=false, startX, scrollLeft;
+    imgWrap.addEventListener('mousedown', function(e){ isDown=true; startX=e.pageX-imgWrap.offsetLeft; scrollLeft=imgWrap.scrollLeft; });
+    imgWrap.addEventListener('mouseleave', function(){ isDown=false; });
+    imgWrap.addEventListener('mouseup', function(){ isDown=false; });
+    imgWrap.addEventListener('mousemove', function(e){ if(!isDown)return; e.preventDefault(); imgWrap.scrollLeft=scrollLeft-(e.pageX-imgWrap.offsetLeft-startX)*1.5; });
+    row.appendChild(imgWrap);
+  } else {
+    var ph = document.createElement('div');
+    ph.style.cssText = 'flex:1;display:flex;align-items:center;justify-content:center;background:#F0EDE8;';
+    ph.innerHTML = '<span style="font-size:12px;color:#AAA;letter-spacing:0.1em;text-transform:uppercase;">Images coming soon</span>';
+    row.appendChild(ph);
+  }
+  list.appendChild(row);
+}
+
+function buildBrands() {
+  BRANDS.forEach(function(b,i){ renderBrandRow(b,i); });
+}
+
+function sortBrands(mode, btn) {
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  var indices = BRANDS.map(function(_,i){ return i; });
+  if(mode==='az') indices.sort(function(a,b){ return BRANDS[a].name.localeCompare(BRANDS[b].name); });
+  else if(mode==='za') indices.sort(function(a,b){ return BRANDS[b].name.localeCompare(BRANDS[a].name); });
+  else if(mode==='price-asc') indices.sort(function(a,b){ return (PRICE_ORDER[BRANDS[a].price]||2)-(PRICE_ORDER[BRANDS[b].price]||2); });
+  else if(mode==='price-desc') indices.sort(function(a,b){ return (PRICE_ORDER[BRANDS[b].price]||2)-(PRICE_ORDER[BRANDS[a].price]||2); });
+  document.getElementById('brands-list').innerHTML='';
+  indices.forEach(function(i,di){ renderBrandRow(BRANDS[i],di); });
+}
+
+// ── MODAL ────────────────────────────────────────────────────────────────────
+function openModal(src, brandName, url, subtitle) {
+  document.getElementById('modal-img').src = src;
+  document.getElementById('modal-eyebrow').textContent = subtitle;
+  document.getElementById('modal-brand-name').textContent = brandName;
+  var b = BRANDS.find(function(x){ return x.name===brandName; });
+  document.getElementById('modal-desc').textContent = b ? b.summary : '';
+  document.getElementById('modal-cta').href = url;
+  document.getElementById('modal').classList.add('on');
+}
+document.getElementById('modal-close-btn').addEventListener('click', function(){ document.getElementById('modal').classList.remove('on'); });
+document.getElementById('modal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('on'); });
+
+// ── CURSOR ───────────────────────────────────────────────────────────────────
+var cur = document.getElementById('cursor');
+document.addEventListener('mousemove', function(e){ cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; });
+document.addEventListener('mouseover', function(e){
+  if(e.target.closest('button,.split,.aes-tile,.aes-grid-item,.brand-img-item,a'))
+    cur.classList.add('grow');
+  else cur.classList.remove('grow');
+});
+window.addEventListener('scroll', function(){
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY>40);
+});
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+buildAesthetics();
+buildBrands();
+</script>
+</body>
+</html>
