@@ -37,8 +37,10 @@ nav.light{background:rgba(247,243,238,.95);backdrop-filter:blur(12px);}
   font-family:'DM Sans',sans-serif;}
 
 /* PAGES */
-.pg{display:none;min-height:100vh;}
-.pg.on{display:block;}
+.pg{display:none !important;min-height:100vh;}
+.pg.on{display:block !important;}
+#pg-home{display:none !important;}
+#pg-home.on{display:grid !important;}
 
 /* ── LANDING ── */
 #pg-home{display:none;grid-template-columns:1fr 1fr;height:100vh;position:relative;}
@@ -226,7 +228,7 @@ nav.light{background:rgba(247,243,238,.95);backdrop-filter:blur(12px);}
 </nav>
 
 <!-- LANDING -->
-<div id="pg-home" class="on">
+<div id="pg-home">
   <div class="split-divider"></div>
   <div class="split" id="split-aes" onclick="goAes()">
     <div class="mosaic mosaic-aes">
@@ -1054,30 +1056,38 @@ const BRANDS = [  {
 
 // ── NAVIGATION ──────────────────────────────────────────────────────────────
 function showPage(id) {
-  // hide all pages
-  document.getElementById('pg-home').classList.remove('on');
-  document.getElementById('pg-aes').classList.remove('on');
-  document.getElementById('pg-brands').classList.remove('on');
+  // Force hide everything with inline styles — no CSS class conflicts possible
+  document.getElementById('pg-home').style.display   = 'none';
+  document.getElementById('pg-aes').style.display    = 'none';
+  document.getElementById('pg-brands').style.display = 'none';
 
-  document.getElementById(id).classList.add('on');
-  window.scrollTo(0,0);
+  // Show the right page
+  if (id === 'pg-home') {
+    document.getElementById('pg-home').style.display = 'grid';
+  } else {
+    document.getElementById(id).style.display = 'block';
+  }
+
+  window.scrollTo(0, 0);
   document.documentElement.scrollTop = 0;
 
-  const nav = document.getElementById('nav');
-  const logo = document.getElementById('nav-logo');
-  const aesbtn = document.getElementById('nav-aes-btn');
-  const brbtn  = document.getElementById('nav-brands-btn');
+  var nav   = document.getElementById('nav');
+  var logo  = document.getElementById('nav-logo');
+  var aesbtn = document.getElementById('nav-aes-btn');
+  var brbtn  = document.getElementById('nav-brands-btn');
 
   if (id === 'pg-home') {
-    nav.className = '';
+    nav.style.background = 'transparent';
+    nav.style.backdropFilter = 'none';
     logo.style.color = 'var(--cream)';
     aesbtn.style.color = 'rgba(247,243,238,0.55)';
     brbtn.style.color  = 'rgba(247,243,238,0.55)';
   } else {
-    nav.className = 'light';
+    nav.style.background = 'rgba(247,243,238,0.95)';
+    nav.style.backdropFilter = 'blur(12px)';
     logo.style.color = 'var(--dark)';
-    aesbtn.style.color = 'var(--muted)';
-    brbtn.style.color  = 'var(--muted)';
+    aesbtn.style.color = '#7C7B74';
+    brbtn.style.color  = '#7C7B74';
   }
 }
 
@@ -1109,8 +1119,7 @@ function buildAesthetics() {
 }
 
 function openAesGallery(aes) {
-  // populate grid
-  const grid = document.getElementById('aes-gallery-grid');
+  var grid = document.getElementById('aes-gallery-grid');
   grid.innerHTML = '';
   document.getElementById('aes-gallery-title').textContent = aes.label;
 
@@ -1127,16 +1136,17 @@ function openAesGallery(aes) {
     grid.appendChild(cell);
   });
 
-  // swap views
   document.getElementById('aes-main').style.display = 'none';
   document.getElementById('aes-gallery-view').style.display = 'block';
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
 }
 
 function closeAesGallery() {
   document.getElementById('aes-gallery-view').style.display = 'none';
   document.getElementById('aes-main').style.display = 'block';
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
 }
 
 // back button — attached once, no inline onclick
@@ -1243,6 +1253,11 @@ window.addEventListener('scroll', function(){
 // ── INIT ─────────────────────────────────────────────────────────────────────
 buildAesthetics();
 buildBrands();
+// Start on home page
+document.getElementById('pg-home').style.display   = 'none';
+document.getElementById('pg-aes').style.display    = 'none';
+document.getElementById('pg-brands').style.display = 'none';
+showPage('pg-home');
 </script>
 </body>
 </html>
